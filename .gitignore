@@ -4,3 +4,10 @@ __pycache__/
 *.log 
 .env 
 ccs106_env_atienza/
+
+# Virtual environments
+venv/
+.env/
+*.env
+cccs106_env_atienza/
+cccs106_env_lastname/
