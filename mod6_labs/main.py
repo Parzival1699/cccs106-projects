@@ -464,7 +464,7 @@ def main(page: ft.Page):
         )
     )
     
-    # --- FIX: Load default city's weather on startup ---
+   
     search_weather(None)
 
 
