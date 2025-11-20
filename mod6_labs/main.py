@@ -19,7 +19,7 @@ def main(page: ft.Page):
     temp_unit = "C"
     search_history = []
     
-    # --- DEFAULT CITY TO LOAD ON STARTUP ---
+
     DEFAULT_CITY = "Manila"
 
     def c_to_f(c): return (c * 9/5) + 32
@@ -56,17 +56,17 @@ def main(page: ft.Page):
             page.theme_mode = ft.ThemeMode.LIGHT
             page.bgcolor = "#f0f4f8"
             theme_btn.icon = "dark_mode"
-            # ***FIXED: Color Hex Value***
+        
             forecast_title.color = "#000000" # BLACK
-            # FIX: Also fix the history_column title color
+          
             history_column.controls[0].color = "#000000" # BLACK 
         else:
             page.theme_mode = ft.ThemeMode.DARK
             page.bgcolor = "#0a0e27"
             theme_btn.icon = "light_mode"
-            # ***FIXED: Color Hex Value***
+          
             forecast_title.color = "#ffffff" # WHITE
-            # FIX: Also fix the history_column title color
+       
             history_column.controls[0].color = "#ffffff" # WHITE 
         page.update()
 
@@ -81,7 +81,7 @@ def main(page: ft.Page):
     def toggle_unit(e):
         nonlocal temp_unit
         temp_unit = "F" if e.control.value else "C"
-        # FIX: Check if city_input has a value before attempting to re-search
+       
         if city_input.value:
             search_weather(None)
         page.update()
@@ -100,7 +100,7 @@ def main(page: ft.Page):
         prefix_icon="location_city",
         expand=True,
         on_submit=lambda e: search_weather(e),
-        # SET DEFAULT CITY VALUE IN INPUT FIELD
+    
         value=DEFAULT_CITY,
     )
 
@@ -153,7 +153,7 @@ def main(page: ft.Page):
         city_name = data["name"]
         country = data["sys"]["country"]
 
-        # FIX: Replace details_grid usage with the content from render_current_weather
+  
         return ft.Container(
             expand=True,
             content=ft.Column(
@@ -187,7 +187,7 @@ def main(page: ft.Page):
                                         weight=ft.FontWeight.BOLD,
                                         color="#ffffff",
                                     ),
-                                    # FIXED description visibility
+                               
                                     ft.Text(
                                         description,
                                         size=26,
@@ -240,12 +240,12 @@ def main(page: ft.Page):
             daily[date].append((temp, icon, desc))
 
         for date, entries in list(daily.items())[:5]:
-            # The original logic for max/min is correct for a single day
+
             max_temp = max(t for t, _, _ in entries)
             min_temp = min(t for t, _, _ in entries)
             avg_temp = sum(t for t, _, _ in entries) / len(entries)
             
-            # Use the icon/description from the midday (around 12/15:00) entry for better accuracy
+
             midday_entry = entries[len(entries) // 2]
             icon = midday_entry[1]
             desc = midday_entry[2]
@@ -296,7 +296,7 @@ def main(page: ft.Page):
 
         history_column.controls.clear()
         
-        # ***FIXED: Color Hex Value (for initial load and state)***
+
         history_column.controls.append(
             ft.Text("Recent Searches", size=18, weight=ft.FontWeight.BOLD, 
                     color="#ffffff" if page.theme_mode == ft.ThemeMode.DARK else "#000000") 
@@ -328,7 +328,7 @@ def main(page: ft.Page):
             page.update()
             return
 
-        # Show loading indicator
+
         result_container.content = ft.Container(
             content=ft.Column(
                 [
@@ -347,7 +347,7 @@ def main(page: ft.Page):
         forecast_data, forecast_error = fetch_forecast(city)
 
         if error or (weather_data and weather_data.get('cod') == 404):
-            # FIX: Handle OpenWeatherMap's 404 response explicitly
+
             result_container.content = ft.Container(
                 content=ft.Column(
                     [
@@ -356,7 +356,7 @@ def main(page: ft.Page):
                             "City not found",
                             size=24,
                             weight=ft.FontWeight.BOLD,
-                            # ***FIXED: Color Hex Value***
+                           
                             color="#ffffff" if page.theme_mode == ft.ThemeMode.DARK else "#000000",
                         ),
                         ft.Text(f"Could not find weather data for '{city}'.", size=14, color="#90caf9", text_align=ft.TextAlign.CENTER),
@@ -367,7 +367,7 @@ def main(page: ft.Page):
                 padding=50,
                 alignment=ft.alignment.center,
             )
-            # Clear forecast row on error
+
             forecast_row.controls.clear()
             page.update()
             return
@@ -376,7 +376,7 @@ def main(page: ft.Page):
         if not forecast_error:
             render_forecast_cards(forecast_data)
         
-        # FIX: The city name from API might be capitalized differently, so use it for history
+
         update_history(weather_data["name"])
         page.update()
 
